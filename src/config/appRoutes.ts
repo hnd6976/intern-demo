@@ -1,6 +1,6 @@
 const appRoutes = {
 	notFound: '/not-found',
-	home: '/',
+	home: '/home',
 	login: '/login',
 	register: '/register',
 	search:'/search'

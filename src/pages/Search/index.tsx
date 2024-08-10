@@ -17,6 +17,7 @@ function Search() {
         console.log(res.data);
         let listResult: Array<country> = [];
         res.data.map((e: any) => {
+          //Can loai bo any
           const country = {
             name: e.name.common,
             continents: e.continents,
@@ -45,7 +46,7 @@ function Search() {
             <Input onChange={(e) => setName(e.target.value)} />
             <div className="w-full justify-items-start my-2">
               <p className="text-white text-left">
-                {result.length + " result"}
+                {result.length + " results"}
               </p>
             </div>
             {result.length == 0 ? (

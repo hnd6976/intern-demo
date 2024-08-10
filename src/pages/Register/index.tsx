@@ -1,16 +1,10 @@
-import { Button, DatePicker, Input } from "antd";
-import {
-  EyeInvisibleOutlined,
-  EyeOutlined,
-  CalendarOutlined,
-} from "@ant-design/icons";
-
+import { Button } from "antd";
 import { Label } from "@/components/ui/Label";
 import { Link, useNavigate } from "react-router-dom";
-import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import api from "@/untils/api.until";
+import api from "@/utils/api.util";
 import storageService from "@/services/storageServices";
 
 interface IRegisterForm {
@@ -18,7 +12,7 @@ interface IRegisterForm {
   firstName: string;
   lastName: string;
   password: string;
-  confirmPassword: string;
+  passwordConfirmation: string;
 }
 const formSchema = yup.object().shape({
   email: yup.string().email().required("Email is required !"),
@@ -36,6 +30,7 @@ const formSchema = yup.object().shape({
     .min(8, "Password should be 8 chars minimum"),
   passwordConfirmation: yup
     .string()
+    .required()
     .oneOf([yup.ref("password")], "Passwords must match"),
 });
 
@@ -50,14 +45,12 @@ const Register = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = (data: any) => {
-    console.log({ data });
-    reset();
+  const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
+    //Tam thoi chua ket noi
     const handleRegister = async () => {
       try {
         const res = await api.post("/auth/register", {
           email: data.email,
-
           first_name: data.firstName,
           last_name: data.lastName,
           password: data.password,
@@ -140,7 +133,12 @@ const Register = () => {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label className="text-gray-200" htmlFor="password">
+            <Label
+              className={`${
+                errors?.password ? "text-red-400" : "text-gray-200"
+              } text-md`}
+              htmlFor="password"
+            >
               PASSWORD{" "}
             </Label>
 
@@ -154,13 +152,18 @@ const Register = () => {
             <p className="text-red-400">{errors.password?.message}</p>
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label className="text-gray-200" htmlFor="confirmPassword">
+            <Label
+              className={`${
+                errors?.passwordConfirmation ? "text-red-400" : "text-gray-200"
+              } text-md`}
+              htmlFor="confirmPassword"
+            >
               CONFIRM PASSWORD{" "}
             </Label>
 
             <input
               {...register("passwordConfirmation")}
-              id="ComfirmPassword"
+              id="passwordConfirmation"
               className="f-input-dark"
               defaultValue=""
               type="password"

@@ -3,7 +3,7 @@ import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 import { Link } from "react-router-dom";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
-import api from "@/untils/api.until";
+import api from "@/utils/api.util";
 import storageService from "@/services/storageServices";
 import { Label } from "@/components/ui/Label";
 interface ILoginForm {

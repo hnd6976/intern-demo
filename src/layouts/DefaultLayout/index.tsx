@@ -21,11 +21,11 @@ type MenuItem = Required<MenuProps>["items"][number];
 const items: MenuItem[] = [
   {
     label: (
-      <NavLink to="/login" className="nav__logo">
+      <NavLink to="/home" className="nav__logo">
         Home
       </NavLink>
     ),
-    key: "home",
+    key: "/home",
     icon: <HomeOutlined />,
   },
   {

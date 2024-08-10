@@ -1,4 +1,4 @@
-import api from "@/untils/api.until";
+import api from "@/utils/api.util";
 export const findCountry=async(name:string)=>{
     const res= await api.get(`/name/${name}`);
     return res;
