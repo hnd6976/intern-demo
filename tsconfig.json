@@ -1,11 +1,38 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+	"compilerOptions": {
+		"target": "ES2022",
+		"lib": ["dom", "dom.iterable", "esnext", "ES2022"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"baseUrl": ".",
+		"outDir": "./build",
+		"paths": {
+			"@/*": ["src/*"],
+			"@assets/*": ["src/assets/*"],
+			"@environments/*": ["src/environments/*"],
+			"@shared/*": ["src/shared/*"],
+			"@config/*": ["src/config/*"],
+			"@pages/*": ["src/pages/*"],
+			"@store/*": ["src/store/*"],
+			"@utils/*": ["src/utils/*"],
+			"@services/*": ["src/services/*"],
+			"@routes/*": ["src/routes/*"],
+			"@layouts/*": ["src/layouts/*"]
+		}
+	},
+	"include": [ "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.astro", "images.d.ts","**/*.js", "**/*.ts", "**/*.tsx"],
+	//"references": [{ "path": "./tsconfig.node.json" }]
 }
