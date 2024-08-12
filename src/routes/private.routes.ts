@@ -1,8 +1,8 @@
 import { IRoute } from '@shared/models/routes.model';
 import appRoutes from '@config/appRoutes';
 
-import MainLayout from '@layouts/MainLayout';
-import Search from '@/pages/Search';
+import MainLayout from '@/layouts/MainLayout/Index';
+import Search from '@/pages/Search/Index';
 
 
 

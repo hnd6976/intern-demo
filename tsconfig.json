@@ -28,7 +28,8 @@
 			"@utils/*": ["src/utils/*"],
 			"@services/*": ["src/services/*"],
 			"@routes/*": ["src/routes/*"],
-			"@layouts/*": ["src/layouts/*"]
+			"@layouts/*": ["src/layouts/*"],
+			"@hooks/*": ["src/hooks/*"]
 		}
 	},
 	"include": [ "src/**/*.d.ts",

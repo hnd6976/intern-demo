@@ -3,15 +3,19 @@ import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 import { Link } from "react-router-dom";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
-import api from "@/utils/api.util";
+import api from "@/utils/countryAPI.util";
 import storageService from "@/services/storageServices";
 import { Label } from "@/components/ui/Label";
+import { useContext } from "react";
+import { useAuth } from "@/contexts/JWTAuthContext";
+
 interface ILoginForm {
   email: string;
   password: string;
 }
 
 const Login = () => {
+  const { login } = useAuth();
   const {
     handleSubmit,
     control,
@@ -19,22 +23,12 @@ const Login = () => {
   } = useForm<ILoginForm>();
 
   const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
-    try {
-      const { data: res } = await api.post("/auth/login", {
-        email: data.email,
-        password: data.password,
-      });
-
-      if (res.success) {
-        storageService.setAccessToken(res.data.access_token);
-      }
-    } catch (error) {
-      // Handle error or redirect to login
-    }
+    console.log(data);
+    const res = await login(data.email, data.password);
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className=" items-center justify-center">
       <div className="min-h-[26rem] w-[35rem] bg-color-f-03 shadow-xl rounded-md px-10 py-12 flex flex-col gap-4">
         <div className="flex flex-col items-center justify-center">
           <h2 className="text-2xl font-semibold text-gray-100">
@@ -106,7 +100,7 @@ const Login = () => {
                 message: "Login or password is invalid",
               },
               minLength: {
-                value: 8,
+                value: 6,
                 message: "8 characters or longer",
               },
             }}

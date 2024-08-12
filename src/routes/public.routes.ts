@@ -1,11 +1,11 @@
 import { IRoute } from '@shared/models/routes.model';
 import appRoutes from '@config/appRoutes';
 
-import DefaultLayout from '@layouts/DefaultLayout';
-import Search from '@/pages/Search';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import Home from '@/pages/Home';
+import DefaultLayout from '@/layouts/DefaultLayout/Index';
+import Search from '@/pages/Search/Index';
+import Login from '@/pages/Login/Index';
+import Register from '@/pages/Register/Index';
+import Home from '@/pages/Home/Index';
 
 const publicRoutes: IRoute[] = [
 	

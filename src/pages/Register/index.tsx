@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import api from "@/utils/api.util";
+import api from "@/utils/countryAPI.util";
 import storageService from "@/services/storageServices";
 
 interface IRegisterForm {
@@ -67,7 +67,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className=" items-center justify-center">
       <div className="min-h-[26rem] w-[35rem] bg-color-f-03 shadow-xl rounded-md px-10 py-12 flex flex-col gap-4">
         <div className="flex flex-col items-center justify-center">
           <h2 className="text-2xl font-semibold text-gray-100">

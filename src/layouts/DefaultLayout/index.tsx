@@ -1,20 +1,35 @@
-import { ReactNode, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
-  DesktopOutlined,
-  FileOutlined,
+  AppstoreOutlined,
+  BarChartOutlined,
+  CloudOutlined,
   HomeOutlined,
-  PieChartOutlined,
   SearchOutlined,
   SettingOutlined,
+  ShopOutlined,
   TeamOutlined,
-  UnorderedListOutlined,
+  UploadOutlined,
   UserOutlined,
+  VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme } from "antd";
 import type { MenuProps } from "antd";
-import appRoutes from "@config/appRoutes";
-const { Header, Content, Footer } = Layout;
+import { Avatar, Flex, Layout, Menu, theme } from "antd";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "@/contexts/JWTAuthContext";
+import Typography from "antd/es/typography/Typography";
+
+const { Header, Content, Footer, Sider } = Layout;
+
+const siderStyle: React.CSSProperties = {
+  overflow: "auto",
+  height: "100vh",
+  position: "fixed",
+  insetInlineStart: 0,
+  top: 0,
+  bottom: 0,
+  scrollbarWidth: "thin",
+  scrollbarColor: "unset",
+};
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -70,6 +85,7 @@ const items: MenuItem[] = [
     ],
   },
 ];
+
 interface IDefaultLayoutProps {
   children: ReactNode;
 }
@@ -84,31 +100,50 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
     console.log("click ", e);
     setCurrent(e.key);
   };
+  const { user } = useAuth();
+  useEffect(() => {
+    console.log(user);
+  });
   return (
-    <div className="flex flex-col justify-between w-screen h-screen overflow-y-scroll bg-center bg-repeat bg-cover bg-image-1">
-      <Header
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <div className="demo-logo" />
+    <Layout hasSider>
+      <Sider style={siderStyle}>
+        <Flex
+          style={{
+            padding: 10,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Avatar size={50} src={user?.avatar} />
+          <Typography style={{ marginLeft: 10, color: "white" }}>
+            {user?.userName}
+          </Typography>
+        </Flex>
+
         <Menu
+          theme="dark"
+          mode="inline"
           onClick={onClick}
           selectedKeys={[current]}
-          mode="horizontal"
           items={items}
         />
-      </Header>
-
-      <div>{children}</div>
-
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
-    </div>
+      </Sider>
+      <Layout style={{ marginInlineStart: 200 }}>
+        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+          <div
+            style={{
+              padding: 24,
+              textAlign: "center",
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            {children}
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
   );
 }
 
