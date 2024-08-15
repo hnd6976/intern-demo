@@ -11,7 +11,7 @@ const AppRouter: React.FC = () => {
     <Routes>
       <Route
         path="/"
-        element={<Navigate to={appRoutes.search} replace={true} />}
+        element={<Navigate to={appRoutes.countryInfor} replace={true} />}
       />
 
       {/* Public Routes */}

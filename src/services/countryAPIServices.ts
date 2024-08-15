@@ -3,8 +3,7 @@ import countryApi from "@/utils/countryAPI.util";
 export const findCountry=async(name:string)=>{
     const res= await countryApi.get(`/name/${name}`);
     console.log(res)
-    let listResult:CountrySearch[]=[]
-    
+    let listResult:CountrySearch[]=[]   
     res.data.map((e:Country)=>{
         let country:CountrySearch ={
             name:e.name.common,

@@ -1,7 +1,7 @@
 import { Button, Input } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import api from "@/utils/countryAPI.util";
 import storageService from "@/services/storageServices";
@@ -15,6 +15,7 @@ interface ILoginForm {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
   const { login } = useAuth();
   const {
     handleSubmit,
@@ -23,12 +24,14 @@ const Login = () => {
   } = useForm<ILoginForm>();
 
   const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
-    console.log(data);
-    const res = await login(data.email, data.password);
+    try {
+      const res = await login(data.email, data.password);
+      navigate("/search");
+    } catch (err) {}
   };
 
   return (
-    <div className=" items-center justify-center">
+    <div className="flex items-center justify-center">
       <div className="min-h-[26rem] w-[35rem] bg-color-f-03 shadow-xl rounded-md px-10 py-12 flex flex-col gap-4">
         <div className="flex flex-col items-center justify-center">
           <h2 className="text-2xl font-semibold text-gray-100">

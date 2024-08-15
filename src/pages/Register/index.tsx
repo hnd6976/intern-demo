@@ -6,24 +6,18 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import api from "@/utils/countryAPI.util";
 import storageService from "@/services/storageServices";
+import { useAuth } from "@/contexts/JWTAuthContext";
 
 interface IRegisterForm {
   email: string;
-  firstName: string;
-  lastName: string;
+  username: string;
   password: string;
   passwordConfirmation: string;
 }
 const formSchema = yup.object().shape({
   email: yup.string().email().required("Email is required !"),
-  firstName: yup
-    .string()
-    .required()
-    .min(2, "First Name should be 2 chars minimum"),
-  lastName: yup
-    .string()
-    .required()
-    .min(2, "Last Name should be 2 chars minimum"),
+
+  username: yup.string().required().min(2, "Name should be 2 chars minimum"),
   password: yup
     .string()
     .required()
@@ -35,6 +29,7 @@ const formSchema = yup.object().shape({
 });
 
 const Register = () => {
+  const { registerAccount } = useAuth();
   const {
     register,
     handleSubmit,
@@ -48,26 +43,16 @@ const Register = () => {
   const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
     //Tam thoi chua ket noi
     const handleRegister = async () => {
-      try {
-        const res = await api.post("/auth/register", {
-          email: data.email,
-          first_name: data.firstName,
-          last_name: data.lastName,
-          password: data.password,
-        });
-        if (res.data.success) {
-          storageService.setAccessToken(res.data.access_token.token);
-          reset();
-          navigate("/");
-        } else {
-        }
-      } catch (error) {}
+      await registerAccount(data.email, data.username, data.password);
     };
-    handleRegister();
+    try {
+      handleRegister();
+      navigate("/login");
+    } catch (err) {}
   };
 
   return (
-    <div className=" items-center justify-center">
+    <div className=" flex items-center justify-center">
       <div className="min-h-[26rem] w-[35rem] bg-color-f-03 shadow-xl rounded-md px-10 py-12 flex flex-col gap-4">
         <div className="flex flex-col items-center justify-center">
           <h2 className="text-2xl font-semibold text-gray-100">
@@ -93,43 +78,23 @@ const Register = () => {
             />
             <p className="text-red-400">{errors.email?.message}</p>
           </div>
-          <div className="grid grid-cols-2 gap-x-4">
-            <div className="flex flex-col gap-1.5 col-span-1">
-              <Label
-                className={`${
-                  errors?.firstName ? "text-red-400" : "text-gray-200"
-                } text-md`}
-                htmlFor="firstName"
-              >
-                FIRST NAME{" "}
-              </Label>
+          <div className="flex flex-col gap-1.5">
+            <Label
+              className={`${
+                errors?.email ? "text-red-400" : "text-gray-200"
+              } text-md`}
+              htmlFor="email"
+            >
+              USERNAME{" "}
+            </Label>
 
-              <input
-                {...register("firstName")}
-                id="firstName"
-                className="f-input-dark"
-                defaultValue=""
-              />
-              <p className="text-red-400">{errors.firstName?.message}</p>
-            </div>
-            <div className="flex flex-col gap-1.5 col-span-1">
-              <Label
-                className={`${
-                  errors?.lastName ? "text-red-400" : "text-gray-200"
-                } text-md`}
-                htmlFor="lastName"
-              >
-                LAST NAME{" "}
-              </Label>
-
-              <input
-                {...register("lastName")}
-                id="lastName"
-                className="f-input-dark"
-                defaultValue=""
-              />
-              <p className="text-red-400">{errors.lastName?.message}</p>
-            </div>
+            <input
+              {...register("username")}
+              id="username"
+              className="f-input-dark"
+              defaultValue=""
+            />
+            <p className="text-red-400">{errors.username?.message}</p>
           </div>
 
           <div className="flex flex-col gap-1.5">

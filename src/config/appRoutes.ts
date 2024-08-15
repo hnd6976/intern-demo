@@ -3,7 +3,8 @@ const appRoutes = {
 	home: '/home',
 	login: '/login',
 	register: '/register',
-	search:'/search'
+	search:'/search',
+	countryInfor:'/countryInfor'
 };
 
 export default appRoutes;

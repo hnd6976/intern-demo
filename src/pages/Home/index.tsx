@@ -1,4 +1,4 @@
-import { Button, Input } from "antd";
+import { Button, Flex, Input, Typography } from "antd";
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 import { Link } from "react-router-dom";
@@ -9,8 +9,8 @@ import { Label } from "@/components/ui/Label";
 
 const Home = () => {
   return (
-    <div className="flex items-center justify-center bg-blue-500 h-[30rem]">
-      <h2>Home Page</h2>
+    <div className="">
+      <p>llll</p>
     </div>
   );
 };

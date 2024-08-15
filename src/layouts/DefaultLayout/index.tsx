@@ -13,10 +13,11 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Avatar, Flex, Layout, Menu, theme } from "antd";
+import { Avatar, Flex, Input, Layout, Menu, theme } from "antd";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/JWTAuthContext";
 import Typography from "antd/es/typography/Typography";
+import useWindowDimensions from "@/hooks/useWindowDimensions";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -94,6 +95,8 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const { height, width } = useWindowDimensions();
+  console.log(height, width);
   const [current, setCurrent] = useState("search");
 
   const onClick: MenuProps["onClick"] = (e) => {
@@ -105,7 +108,13 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
     console.log(user);
   });
   return (
-    <Layout hasSider>
+    <Layout
+      hasSider
+      style={{
+        width: width?.toString() + "px",
+        height: height?.toString() + "px",
+      }}
+    >
       <Sider style={siderStyle}>
         <Flex
           style={{
@@ -128,19 +137,40 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
           items={items}
         />
       </Sider>
-      <Layout style={{ marginInlineStart: 200 }}>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-          <div
-            style={{
-              padding: 24,
-              textAlign: "center",
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            {children}
-          </div>
+      <Layout
+        style={{
+          marginInlineStart: 200,
+          marginBlockStart: 70,
+        }}
+      >
+        <Header
+          style={{
+            marginLeft: 200,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            zIndex: 1000,
+            width: "100%",
+          }}
+        >
+          <div className="demo-logo" />
+          <Input style={{ width: 260 }} placeholder="Search" />
+          <SearchOutlined
+            style={{ color: "white", fontSize: 25, marginLeft: 5 }}
+          />
+        </Header>
+        <Content
+          style={{
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "10px",
+          }}
+        >
+          {children}
         </Content>
       </Layout>
     </Layout>

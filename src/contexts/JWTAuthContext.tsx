@@ -14,8 +14,13 @@ import {
   InitialState,
   MyToken,
   UseProfile,
+  UserResponse,
 } from "@/shared/interfaces/context.interface";
 import authAPI from "@/utils/authAPI.util";
+import { authenticate, signup } from "@/services/authAPIServices";
+import { SuccessResponse } from "@/shared/interfaces/country.interface";
+import Cookies from "js-cookie";
+import storageKeys from "@/config/storageKeys";
 
 const authState: InitialState = {
   isAuthenticated: false,
@@ -36,6 +41,7 @@ const setSession = (accessToken: string) => {
   if (accessToken) {
     localStorage.setItem("accessToken", accessToken);
     authAPI.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    Cookies.set(storageKeys.refreshToken, accessToken);
   } else {
     localStorage.removeItem("accessToken");
     delete authAPI.defaults.headers.common.Authorization;
@@ -90,7 +96,7 @@ const AuthContext = createContext({
   method: "JWT",
   login: (email: string, password: string) => Promise.resolve(),
   logout: () => {},
-  register: (email: string, username: string, password: string) =>
+  registerAccount: (email: string, username: string, password: string) =>
     Promise.resolve(),
 });
 
@@ -99,22 +105,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await authAPI.post(`auth/signin`, {
-        username: username,
-        password: password,
-      });
-      const { token, user } = response.data;
+      const response = await authenticate(username, password);
       console.log(response.data);
-      const roles = response.data.roles;
+      const token = response.data.accessToken;
+      const user: UseProfile = {
+        userName: response.data.username,
+        email: response.data.email,
+        avatar: response.data.avatar,
+      };
       setSession(token);
       dispatch({
         type: ActionKind.LOGIN,
         payload: {
-          user: {
-            userName: user.username,
-            email: user.email,
-            avatar: user.image,
-          },
+          user: user,
         },
       });
 
@@ -129,27 +132,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (
+  const registerAccount = async (
     email: string,
     username: string,
     password: string
   ) => {
-    const response = await axios.post("/api/auth/register", {
-      email,
-      username,
-      password,
-    });
-
-    const { accessToken, user } = response.data;
-
-    setSession(accessToken);
-
-    dispatch({
-      type: ActionKind.RESISTER,
-      payload: {
-        user,
-      },
-    });
+    try {
+      const response = await signup(email, username, password);
+      console.log(response);
+      const { accessToken, user } = response.data;
+      setSession(accessToken);
+      dispatch({
+        type: ActionKind.RESISTER,
+        payload: {
+          user,
+        },
+      });
+      swal("Đăng ký thành công !", {
+        icon: "success",
+      });
+    } catch (err) {
+      const errors = err as Error | AxiosError;
+      swal(errors.message, {
+        icon: "error",
+      });
+    }
   };
 
   const logout = () => {
@@ -161,11 +168,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     (async () => {
       try {
         const accessToken = window.localStorage.getItem("accessToken");
-        // const accessToken = cookies.accessToken;
         if (accessToken) {
           setSession(accessToken);
           const response = await authAPI.get(`user/getProfile`);
-          console.log(response);
           const user: UseProfile = {
             userName: response.data.username,
             email: response.data.email,
@@ -213,7 +218,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         method: "JWT",
         login,
         logout,
-        register,
+        registerAccount,
       }}
     >
       {children}

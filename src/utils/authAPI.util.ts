@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import storageService from '@/services/storageServices';
+import storageKeys from '@/config/storageKeys';
 import { environment } from '@environments/environment'
 
 const authAPI = axios.create({
@@ -10,12 +11,12 @@ const authAPI = axios.create({
 // Add a request interceptor
 authAPI.interceptors.request.use(
 	async (config) => {
-		//const access_token = storageService.getAccessToken();
+		const access_token = storageService.getAccessToken();
 
-		//if (access_token) {
-		//	config.headers.Authorization = `Bearer ${access_token}`;
-		//}
-        config.headers['X-RapidAPI-Key'] = environment.apiKey;
+		if (access_token) {
+		config.headers.Authorization = `Bearer ${access_token}`;
+		}
+       // config.headers['X-RapidAPI-Key'] = environment.apiKey;
 		return Promise.resolve(config);
 	},
 	(error) => {
@@ -34,7 +35,7 @@ authAPI.interceptors.request.use(
 );
 
 // Add a response interceptor
-/*authAPI.interceptors.response.use(
+authAPI.interceptors.response.use(
 	(response) => response,
 	async (error) => {
 		const originalRequest = error.config;
@@ -46,7 +47,7 @@ authAPI.interceptors.request.use(
 
 			try {
 				const refreshToken = Cookies.get(storageKeys.refreshToken);
-				const response = await axios.post('/auth/refresh-token', {
+				const response = await authAPI.post('/auth/refreshtoken', {
 					refreshToken,
 				});
 				const { token } = response.data;
@@ -64,7 +65,7 @@ authAPI.interceptors.request.use(
 		return Promise.reject(error);
 	}
 );
-*/
+
 authAPI.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data

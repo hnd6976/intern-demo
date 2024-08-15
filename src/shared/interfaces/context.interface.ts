@@ -1,7 +1,18 @@
 export interface UseProfile {
+    
     userName: string;
     email: string;
     avatar: string;
+    
+
+}
+export interface UserResponse{
+    id:number,
+    username: string;
+    email: string;
+    avatar: string;
+    accessToken:string,
+    refreshToken:string
 }
 export interface MyToken {
     name: string;

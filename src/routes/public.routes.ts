@@ -6,6 +6,7 @@ import Search from '@/pages/Search/Index';
 import Login from '@/pages/Login/Index';
 import Register from '@/pages/Register/Index';
 import Home from '@/pages/Home/Index';
+import CountryInfor from '@/pages/CountryInfor/Index';
 
 const publicRoutes: IRoute[] = [
 	
@@ -28,6 +29,11 @@ const publicRoutes: IRoute[] = [
 		path: appRoutes.register,
 		layout: DefaultLayout,
 		component: Register,
+	},
+	{
+		path: appRoutes.countryInfor,
+		layout: DefaultLayout,
+		component: CountryInfor,
 	},
 	
 ];
