@@ -112,7 +112,7 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
       hasSider
       style={{
         width: width?.toString() + "px",
-        height: height?.toString() + "px",
+        //height: height?.toString() + "px",
       }}
     >
       <Sider style={siderStyle}>

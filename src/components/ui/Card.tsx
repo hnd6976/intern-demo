@@ -8,12 +8,16 @@ type Props = {
 };
 const CardProps = ({ title, children, icon }: Props) => {
   return (
-    <div className="  my-3 items-center justify-center rounded-md bg-indigo-100 p-5">
-      <div className="flex p-2 border-b-2">
+    <div className="  my-3 items-center justify-center rounded-md bg-indigo-100 p-5 shadow-lg">
+      <div className="flex p-2 border-b-2 border-gray-300">
         {icon}
-        <Typography style={{ fontSize: 16 }}>{title}:</Typography>
+        <Typography style={{ fontSize: 16, fontWeight: "bold", marginLeft: 5 }}>
+          {title}
+        </Typography>
       </div>
-      <div className="flex ml-8 items-center justify-center ">{children}</div>
+      <div className="flex ml-8 items-center justify-center p-5 ">
+        {children}
+      </div>
     </div>
   );
 };

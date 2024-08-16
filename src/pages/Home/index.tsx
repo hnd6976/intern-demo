@@ -6,11 +6,14 @@ import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import api from "@/utils/countryAPI.util";
 import storageService from "@/services/storageServices";
 import { Label } from "@/components/ui/Label";
+import LocationSensitive from "@/components/ui/LocationSensitive";
 
 const Home = () => {
   return (
-    <div className="">
-      <p>llll</p>
+    <div>
+      <div>
+        <LocationSensitive />
+      </div>
     </div>
   );
 };
