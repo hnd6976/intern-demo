@@ -43,11 +43,10 @@ const Register = () => {
   const onSubmit: SubmitHandler<IRegisterForm> = (data) => {
     //Tam thoi chua ket noi
     const handleRegister = async () => {
-      await registerAccount(data.email, data.username, data.password);
+      await registerAccount(data.email, data.username, data.password, navigate);
     };
     try {
       handleRegister();
-      navigate("/login");
     } catch (err) {}
   };
 

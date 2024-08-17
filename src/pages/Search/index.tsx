@@ -23,6 +23,8 @@ function Search() {
     queryFn: () => {
       return findCountryByName(debouncedName);
     },
+
+    staleTime: 60 * 1000,
   });
 
   function handleInputOnchange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -38,7 +40,11 @@ function Search() {
         <div className="flex flex-col items-center justify-center">
           <Input onChange={handleInputOnchange} />
           <div className="w-full justify-items-start my-2">
-            <p className="text-white text-left">{data?.length + " results"}</p>
+            {data?.length ? (
+              <p className="text-white text-left">
+                {data?.length + " results"}
+              </p>
+            ) : null}
           </div>
           {data?.length == 0 ? (
             <div className="h-[18rem]">
@@ -48,7 +54,10 @@ function Search() {
             <div className="h-[18rem] overflow-y-scroll no-scrollbar">
               {data?.map((e) => {
                 return (
-                  <NavLink to="/countryInfor" state={{ code: e.cca2 }}>
+                  <NavLink
+                    to="/countryInfor"
+                    state={{ code: e.cca2, name: e.name.common }}
+                  >
                     <div
                       key={e.name.common}
                       className="h-[3rem] w-[27rem] flex items-center  bg-indigo-100 rounded-md px-5 py-8 my-5"

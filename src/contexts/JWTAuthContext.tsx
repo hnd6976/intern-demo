@@ -17,10 +17,11 @@ import {
   UserResponse,
 } from "@/shared/interfaces/context.interface";
 import authAPI from "@/utils/authAPI.util";
-import { authenticate, signup } from "@/services/authAPIServices";
+import { authenticate, signout, signup } from "@/services/authAPIServices";
 import { SuccessResponse } from "@/shared/interfaces/country.interface";
 import Cookies from "js-cookie";
 import storageKeys from "@/config/storageKeys";
+import { NavigateFunction } from "react-router-dom";
 
 const authState: InitialState = {
   isAuthenticated: false,
@@ -37,13 +38,14 @@ const isValidToken = (accessToken: string) => {
   const currentTime = Date.now() / 1000;
   return decodedToken.exp > currentTime;
 };
-const setSession = (accessToken: string) => {
+const setSession = (accessToken: string, refreshToken: string) => {
   if (accessToken) {
     localStorage.setItem("accessToken", accessToken);
     authAPI.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    Cookies.set(storageKeys.refreshToken, accessToken);
+    Cookies.set(storageKeys.refreshToken, refreshToken);
   } else {
     localStorage.removeItem("accessToken");
+    Cookies.remove(storageKeys.refreshToken);
     delete authAPI.defaults.headers.common.Authorization;
   }
 };
@@ -94,26 +96,36 @@ const reducer = (state: InitialState, action: Action) => {
 const AuthContext = createContext({
   ...authState,
   method: "JWT",
-  login: (email: string, password: string) => Promise.resolve(),
-  logout: () => {},
-  registerAccount: (email: string, username: string, password: string) =>
+  login: (email: string, password: string, navigate: NavigateFunction) =>
     Promise.resolve(),
+  logout: () => {},
+  registerAccount: (
+    email: string,
+    username: string,
+    password: string,
+    navigate: NavigateFunction
+  ) => Promise.resolve(),
 });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, authState);
 
-  const login = async (username: string, password: string) => {
+  const login = async (
+    username: string,
+    password: string,
+    navigate: NavigateFunction
+  ) => {
     try {
       const response = await authenticate(username, password);
       console.log(response.data);
       const token = response.data.accessToken;
+      const refreshToken = response.data.refreshToken;
       const user: UseProfile = {
         userName: response.data.username,
         email: response.data.email,
         avatar: response.data.avatar,
       };
-      setSession(token);
+      setSession(token, refreshToken);
       dispatch({
         type: ActionKind.LOGIN,
         payload: {
@@ -124,9 +136,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       swal("Đăng nhập thành công !", {
         icon: "success",
       });
+      navigate("/search");
     } catch (err) {
       const errors = err as Error | AxiosError;
-      swal(errors.message, {
+      console.log(errors);
+      swal("Email hoặc mật khẩu không đúng", {
         icon: "error",
       });
     }
@@ -135,13 +149,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const registerAccount = async (
     email: string,
     username: string,
-    password: string
+    password: string,
+    navigate: NavigateFunction
   ) => {
     try {
       const response = await signup(email, username, password);
-      console.log(response);
+
       const { accessToken, user } = response.data;
-      setSession(accessToken);
+
       dispatch({
         type: ActionKind.RESISTER,
         payload: {
@@ -151,16 +166,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       swal("Đăng ký thành công !", {
         icon: "success",
       });
+      navigate("login");
     } catch (err) {
       const errors = err as Error | AxiosError;
-      swal(errors.message, {
+      console.log(errors);
+      swal("Email hoặc tên không hợp lệ", {
         icon: "error",
       });
     }
   };
 
-  const logout = () => {
-    setSession("");
+  const logout = async () => {
+    setSession("", "");
+    const res = await signout();
     dispatch({ type: ActionKind.LOGOUT, payload: {} });
   };
 
@@ -168,9 +186,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     (async () => {
       try {
         const accessToken = window.localStorage.getItem("accessToken");
-        if (accessToken) {
-          setSession(accessToken);
-          const response = await authAPI.get(`user/getProfile`);
+        const refreshToken = Cookies.get(storageKeys.refreshToken);
+        if (accessToken && isValidToken(accessToken)) {
+          setSession(accessToken, refreshToken ? refreshToken : "");
+          const response = await authAPI.get(`/api/user/getProfile`);
           const user: UseProfile = {
             userName: response.data.username,
             email: response.data.email,
@@ -190,7 +209,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             type: ActionKind.INIT,
             payload: {
               isAuthenticated: false,
-              user: { userName: "de", email: "sssss", avatar: "sss" },
+              user: { userName: "", email: "", avatar: undefined },
             },
           });
         }
@@ -200,7 +219,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           type: ActionKind.INIT,
           payload: {
             isAuthenticated: false,
-            user: { userName: "de", email: "sssss", avatar: "sss" },
+            user: { userName: "", email: "", avatar: undefined },
           },
         });
       }

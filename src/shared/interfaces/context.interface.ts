@@ -2,7 +2,7 @@ export interface UseProfile {
     
     userName: string;
     email: string;
-    avatar: string;
+    avatar: string|undefined;
     
 
 }

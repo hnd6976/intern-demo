@@ -4,6 +4,8 @@ import {
   BarChartOutlined,
   CloudOutlined,
   HomeOutlined,
+  LoginOutlined,
+  LogoutOutlined,
   SearchOutlined,
   SettingOutlined,
   ShopOutlined,
@@ -13,12 +15,12 @@ import {
   VideoCameraOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Avatar, Flex, Input, Layout, Menu, theme } from "antd";
+import { Avatar, Button, Flex, Input, Layout, Menu, theme } from "antd";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "@/contexts/JWTAuthContext";
 import Typography from "antd/es/typography/Typography";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-
+import userPng from "@assets/images/user.png";
 const { Header, Content, Footer, Sider } = Layout;
 
 const siderStyle: React.CSSProperties = {
@@ -53,15 +55,7 @@ const items: MenuItem[] = [
     key: "/search",
     icon: <SearchOutlined />,
   },
-  {
-    label: (
-      <NavLink to="/login" className="nav__logo">
-        Account
-      </NavLink>
-    ),
-    key: "/login",
-    icon: <UserOutlined />,
-  },
+
   {
     label: "Setting",
     key: "setting",
@@ -96,14 +90,14 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const { height, width } = useWindowDimensions();
-  console.log(height, width);
+  const { logout } = useAuth();
   const [current, setCurrent] = useState("search");
 
   const onClick: MenuProps["onClick"] = (e) => {
     console.log("click ", e);
     setCurrent(e.key);
   };
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   useEffect(() => {
     console.log(user);
   });
@@ -123,7 +117,11 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
             alignItems: "center",
           }}
         >
-          <Avatar size={50} src={user?.avatar} />
+          <Avatar
+            size={50}
+            src={user?.avatar ? user.avatar : userPng}
+            style={{ backgroundColor: "white" }}
+          />
           <Typography style={{ marginLeft: 10, color: "white" }}>
             {user?.userName}
           </Typography>
@@ -136,6 +134,18 @@ function DefaultLayout({ children }: IDefaultLayoutProps) {
           selectedKeys={[current]}
           items={items}
         />
+        <div className="pl-7">
+          {isAuthenticated ? (
+            <LogoutOutlined
+              onClick={logout}
+              style={{ fontSize: 20, color: "white" }}
+            />
+          ) : (
+            <NavLink to="/login" className="nav__logo">
+              <LoginOutlined style={{ fontSize: 20, color: "white" }} />
+            </NavLink>
+          )}
+        </div>
       </Sider>
       <Layout
         style={{

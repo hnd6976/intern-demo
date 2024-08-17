@@ -47,7 +47,7 @@ authAPI.interceptors.response.use(
 
 			try {
 				const refreshToken = Cookies.get(storageKeys.refreshToken);
-				const response = await authAPI.post('/auth/refreshtoken', {
+				const response = await authAPI.post('/api/auth/refreshtoken', {
 					refreshToken,
 				});
 				const { token } = response.data;

@@ -5,10 +5,13 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import * as am5 from "@amcharts/amcharts5";
 import am5geodata_data_countries2 from "@amcharts/amcharts5-geodata/data/countries2";
 import useWindowDimensions from "@/hooks/useWindowDimensions";
-function LocationSensitive() {
-  const { height, width } = useWindowDimensions();
+interface Props {
+  cca2: string | undefined;
+}
+function LocationSensitive(props: Props) {
+  console.log(props.cca2);
   useLayoutEffect(() => {
-    let rootLocation = am5.Root.new("chartdiv");
+    let rootLocation = am5.Root.new("chartdivt");
 
     // Set themes
     // https://www.amcharts.com/docs/v5/concepts/themes/
@@ -28,7 +31,7 @@ function LocationSensitive() {
       .load("https://www.amcharts.com/tools/country/?v=xz6Z", chart)
       .then(function (result: any) {
         let geo = am5.JSONParser.parse(result.response);
-        loadGeodata(geo.country_code);
+        loadGeodata(props.cca2);
       });
 
     // Create polygon series for continents
@@ -154,10 +157,10 @@ function LocationSensitive() {
 
   return (
     <div
-      id="chartdiv"
+      id="chartdivt"
       style={{
-        width: 600,
-        height: 600,
+        width: 1030,
+        height: 1000,
       }}
     ></div>
   );

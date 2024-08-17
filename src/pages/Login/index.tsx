@@ -25,8 +25,9 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<ILoginForm> = async (data) => {
     try {
-      const res = await login(data.email, data.password);
-      navigate("/search");
+      const res = await login(data.email, data.password, navigate);
+
+      //navigate("/search");
     } catch (err) {}
   };
 

@@ -25,18 +25,22 @@ export interface Country{
     name:Name,
     cca2:string,
     flags:Image,
+    capital:string[],
     currencies:Record<string,Currency>,
     continents:string[],
+    borders:string[],
     coatOfArms:Image,
     population:number,
     languages:Record<string,string>,
     extra:ExtraProps|undefined
+    timezones:string[]
 
 }
 export interface CountrySearch{
-    name:string,
-    flag:string,
-    continents:string[]
+    name:Name,
+    cca2:string,
+    flags:Image,
+    continents:string[],
 }
 export interface SuccessResponse<T>{
     status:number,

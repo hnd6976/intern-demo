@@ -7,6 +7,8 @@ import Login from '@/pages/Login/Index';
 import Register from '@/pages/Register/Index';
 import Home from '@/pages/Home/Index';
 import CountryInfor from '@/pages/CountryInfor/Index';
+import Location from '@/pages/Location/Location';
+
 
 const publicRoutes: IRoute[] = [
 	
@@ -34,6 +36,11 @@ const publicRoutes: IRoute[] = [
 		path: appRoutes.countryInfor,
 		layout: DefaultLayout,
 		component: CountryInfor,
+	},
+	{
+		path: appRoutes.locationSensitive,
+		layout: DefaultLayout,
+		component: Location,
 	},
 	
 ];

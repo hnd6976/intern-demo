@@ -8,7 +8,7 @@ type Props = {
 };
 const CardProps = ({ title, children, icon }: Props) => {
   return (
-    <div className="  my-3 items-center justify-center rounded-md bg-indigo-100 p-5 shadow-lg">
+    <div className="  my-3 items-center justify-center rounded-md bg-indigo-100 p-2 shadow-lg">
       <div className="flex p-2 border-b-2 border-gray-300">
         {icon}
         <Typography style={{ fontSize: 16, fontWeight: "bold", marginLeft: 5 }}>

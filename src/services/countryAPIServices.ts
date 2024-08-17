@@ -2,7 +2,7 @@ import { Country, CountrySearch, ExtraProps, SuccessResponse } from "@/shared/in
 import countryApi from "@/utils/countryAPI.util";
 import ninjasApi from "@/utils/ninjasAPI.util";
 export const findCountry=async(name:string)=>{
-    const res= await countryApi.get<Country[]>(`/name/${name}`);
+    const res= await countryApi.get<CountrySearch[]>(`/name/${name}?fields=name,flags,cca2,continents`);
     // console.log(res)
     // let listResult:CountrySearch[]=[]   
     // res.data.map((e:Country)=>{
@@ -16,12 +16,18 @@ export const findCountry=async(name:string)=>{
     // console.log(listResult)
     return res.data;
 }
-export const countryDetail=async(code:string)=>{
+export const countryDetail=async(code:string,name:string)=>{
     const res= await countryApi.get<Country[]>(`/alpha/${code}`);
-    const resExtra= await countryDetailExtra(code)
+    const resExtra= await countryDetailExtra(name)
     let country:Country=res.data[0]
     country.extra=resExtra.data[0];
     return country;
+}
+
+export const findBorders=async(code:string)=>{
+    const res= await countryApi.get<CountrySearch>(`/alpha/${code}?fields=name,flags,continents,cca2`);
+    console.log(res.data)
+    return res.data;
 }
 
 export const countryDetailExtra=async(name:string)=>{
