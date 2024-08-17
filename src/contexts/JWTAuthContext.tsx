@@ -166,7 +166,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       swal("Đăng ký thành công !", {
         icon: "success",
       });
-      navigate("login");
+      navigate("/login");
     } catch (err) {
       const errors = err as Error | AxiosError;
       console.log(errors);
